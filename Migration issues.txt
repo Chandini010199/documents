@@ -1,0 +1,65 @@
+Migration issues:
+
+1. ELMD PROD:
+static content deployment /elmd/elmd lo chesthene work aiendhi old setup lo /elmd lo static content undhi
+2. MODEL lo logs DEBUG update chesaru PROD lo FATAL update chesaru so issue vachindhi.FATAL update chesi unchithe only critical logs eh roll avuthai so 
+so PROD lo DEBUG update chesaka work aiendhi.
+3. Datasource test connection fail aiete auth aliases and custom prop check chesi sync node chesi dmgr restart chesam.
+4. cipher issue: We ahve updated the ciphers same as MODEL region which actually worked.
+5. If the Nodeagent is not coming up when you are tryong to bring it up, We have to check whether the signers are been exchanged b/w keystore and truststore or not. If not pls exchange the signers b/w keystores and trustores and try bringing the nodeagent up.
+6. DMGR running in server but console is not accessible: Check the loh=gs and update the supported TLS versions in DMGR security.xml file and try restarting the DMGR and check the status.
+7. 404 error: Mostly check the virtual host and correct port number is been updated in the respective conf file then the server should reach the request to web server and then if still it is throwing an error for context root then we have check the static content deployed path and modify the path by checking the logs.
+8. JVM 's not coming up: If the JVM's are not coming up when you are trying to bring them up then check the JAVA SDK's and update the SDK's as per the value that's been updated in the environment varaiables.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+=====================================
+1. Varscp application JSF/JSP issues: Issue resolved after clearing WebSphere temp
+ 
+2. Varsvendor blank screen issue: We have updated Application Cookie name from VARSVENDOR_JESSIONID to JSESSIONID. 
+3. Deployment chesaka jsp sy=unr11 select chesukovali enterprice applications
+4. Monitoring policy started pettali DNS cutover avvagane.
+
+5.  
+wstemp
+temp
+ 
+rename these 2 folders
+ 
+before you rename, make sure you stop all nodeagents, varscp, varsvmo, varsvendor jvms 
+
+==============================================
+
+1. App servers up cheyali
+
+2. Generate propagate plugin chesi web server start cheyali
+ 
+=============================
+
+ 
+ 

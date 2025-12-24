@@ -1,0 +1,19 @@
+Tomcat migration :
+Existing server : 
+Web : algsascs1751001 Port: 10101
+App: algswscs1755001  Port: 16001
+URL : https://algsascs1751001.r1-core.r1.aig.net:10101/PubClient/PubLogInAction.do
+Please migrate it to below NGPLS dedicated servers below:
+Web server: algsascs1751001
+App server : algsascs1778004
+ 
+-> Download binary file from http://artifactory-am2.devops.aig.net/artifactory/chs-middleware-generic-dev-local/tomcatv9/ and place it in the same file structure as in existing server ex : /app/soft/tomcat_qa/app_name
+ex: /app/soft/tomcat9_qa/publishing_service/apache-tomcat-9.0.31.tar
+Now, tar -xvf apache-tomcat-9.0.31.tar then the tar file will get unzipped.
+/app/soft/tomcat9_qa/publishing_service/apache-tomcat-9.0.31	
+-> Copy files from existing servers conf files i.e., setenv.sh,openjdk,server.xml,webapps/.war file,ssl_keystores/jks file.
+-> Try to restart the instances and access new URL with latest servername & port number
+ex:https://algsascs1778004.r1-core.r1.aig.net:16001/PubClient/PubLogInAction.do
+-> Go to webservers -> check conf file proxypass& proxypassreverse and add new app server details in the proxypass and proxypassreverse.
+-> Post updating the proxy and proxypassreverse parameters restart the server.
+-> Hit the URL and check whether the current webserver is pointing to latest Appserver or not by checking the Appserver logs. 

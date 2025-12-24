@@ -1,0 +1,144 @@
+CLAIMS-ASD:
+
+QA:
+Web Server: vmzldlcimw311.r1-core.r1.aig.net : 35231
+App Server: WEBA2 : 35230/WEBB2 : 35230
+
+MODEL:
+Web server: vmzlmlcimw404.r1-core.r1.aig.net:35131/vmzlmlcimw405.r1-core.r1.aig.net:35151
+App server: WEBQ:35130/WEBR:35130
+
+=========================================
+1. app serv custom prop
+2. Web server config'serv
+3. TLS versions
+4. cell level cert keystore(hemanth)
+5. 
+====================================
+
+Old Console:
+https://dzchasgcwebf01.r1-core.r1.aig.net:60006/ibm/console/login.do?action=secure
+latest console:
+https://dlawwsgi186501.r1-core.r1.aig.net:30001/ibm/console/logon.jsp
+
+================================
+Websphere configurations needs to be done in a new server:
+mail relay
+p12
+MQ
+session affinity
+session management
+Application servers > varsvmo_1 > MonitoringPolicy
+jvm log size
+console preferences
+Monitoring policy
+LDAP(Global security)
+create webserver using configure.sh script in dmgr bin path
+system Adminstartion-->console preferences
+log path needs to be defined in websphere variables in JVM level
+server log root
+
+security mechanism-13
+one claim lo generic JVM arguments
+one claim lo soap.client.prop
+listeners
+Activation specs
+queue connector factors
+Application servers > elmd_dev_1 > Web container > Web container transport chains>wcinboun-->disable
+Application servers > elmd_dev_1 > elmd_dev_1 > JVM Logs> logging and tracing
+Application servers > elmd_1 > ORB service
+Application servers > asd_1 > Web container > Custom properties > com.ibm.ws.webcontainer.httpOnlyCookies 
+Application servers > asd_1 > Session management>cookies
+
+------------------------------------------------------------
+Application servers > varscp_dev_1 > Session management > Cookies
+Application servers > varscp_dev_1 > Web container transport chains > WCInboundDefaultSecure
+Application servers > varsvendor_1 > Web container > Custom properties-->com.ibm.ws.webcontainer.httpOnlyCookies->JSESSIONID
+Application servers > varscp_dev_1 > Process definition > Java Virtual Machine > Custom properties
+heap size->custom properties
+Application servers > varscp_dev_1 >Logging and tracing>size-10MB
+Web servers > varsVendor > Plug-in properties > Custom properties-->UseInsecure(true)
+Application servers > varscp_dev_1 > varscp_dev_1 > JVM Logs-->Size 10 MB
+JMS--> Connection factories,Queue connection factories and Queues
+JDBC providers creation-> jars copying, jass authentication creating and mapping-->Data sources > Varsvmo_oracle > JAAS - J2C authentication data (Take pwd from node/cells-->Security.xml)
+ 
+Websphere variables -> server level(log_root) & cluster level
+SMTP Mail Server data source ?
+virtual host, JMS QCF
+mail relay
+
+=========================================
+
+conf 
+dmgr heap dump
+default conf update cheyali
+/export/local/opt/apps/was85dev/elmd
+web.jar copy from old server
+=================
+PID
+Listen
+user 
+group
+server name
+options-
+error log
+custom log
+server token prod
+server time off
+
+====================================
+VARSVENDOR DEV:
+Old console:
+https://vmzldlcimw313.r1-core.r1.aig.net:21006/ibm/console/login.do?action=secure
+New Console:
+https://dlawwsgi192201.r1-core.r1.aig.net:30001/ibm/console/
+IBMIHS setup:
+
+kdb file from old web server
+apachectl from old web server
+Document root creation - /app/soft/apps/was85dev/varscp
+Plugin folder structure creation --> /app/soft/Plugins85/config/varscp_dev & copy plugin keys here
+conf file needs to be updated with latest paths
+logs path - logs/app_name/
+check syntax
+
+Websphere Setup:
+profile was85 bkp, security.xml & serverindex.xml bkps
+create cluster
+update ports in serverindex.xml node level
+create webserver - using configure.sh - /app/soft/was85/WebSphere/was85_dm/bin
+java_sdk
+Application servers > varscp_dev_1 > Session management > Cookies
+Application servers > varscp_dev_1 > Web container transport chains > WCInboundDefaultSecure
+Application servers > varsvendor_1 > Web container > Custom properties-->com.ibm.ws.webcontainer.httpOnlyCookies->JSESSIONID
+Application servers > varscp_dev_1 > Process definition > Java Virtual Machine > Custom properties
+heap size
+Web servers > varsVendor > Plug-in properties > Custom properties-->UseInsecure(true)
+Application servers > varscp_dev_1 > varscp_dev_1 > JVM Logs-->Size 10 MB
+JMS--> Connection factories,Queue connection factories and Queues
+JDBC providers creation-> jars copying, jass authentication creating and mapping-->Data sources > Varsvmo_oracle > JAAS - J2C authentication data (Take pwd from node/cells-->Security.xml)
+
+ENVIRONMENT-->Websphere variables -> server level(log_root) & cluster level
+SMTP Mail Server data source ?
+virtual host, JMS QCF
+mail relay
+1. /app/soft/apps/was85dev/elmd/elmd
+static content folder structure to be maintained
+2.Virtual Host-->Host alias--> elmd-dev.aig.net:443
+  
+ear installation path:
+$(APP_INSTALL_ROOT)/was85_cell
+curl -k https://dlawwsgi186501.r1-core.r1.aig.net:30021/ check in webserver
+
+==================================
+Need to check with Hemanth/Sandeep
+
+1. Curl cmnd connection refused
+2.generic JVM aruguments
+3.
+
+
+============================
+PROD DNS cutover:
+1. Monitoring policy started update cheyali in AWS servers and stopped in On-prem servers.
+2. 
