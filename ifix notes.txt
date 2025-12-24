@@ -1,0 +1,85 @@
+How to apply IFIX for IHS:
+
+1.We need the binary/zip file of the latest fix to apply.
+
+2.Download the binary/zip file to your local.
+
+3.Copy the Zip/binary file to the server /tmp path using winscp/any other known method.
+
+4.Now,
+    the binary file has to be placed in the path, we are usually copying this file to the software path in the server(any path where it required).
+
+5. For our easy understanding and to follow a std. mthd we are creating a directory as IBMIHS85_IFIX under software folder.
+path:/export/local/opt/software/IBMIHS85_IFIX
+
+6.Navigate to the /export/local/opt/software/IBMIHS85_IFIX path  
+copy the binary file from /tmp to the current path.
+cmnd: cp -rp /tmp/binaryfile .
+eg: cp -rp /tmp/8.5.5.11-ws-wasihs_gskit-multios-ifpi94222.zip .
+and 
+unzip the file
+cmnd: unzip 8.5.5.11-ws-wasihs_gskit-multios-ifpi94222.zip
+
+7.Now we have to prepare the imcl command to install the fix
+Before applying the fix we've to stop all the instances running under current IHS version.
+cmnd: for i in `ls -1 /app/IBMIHS85/bin/apachectl_*`; do ${i} stop; done(using this all the instances will be stopped at a time)
+IBMIHS85= current version of IHS running.
+
+8.We've to apply the fix.
+For that,
+navigate to home directory
+cmnd : cd (enter)
+now, we are into our home directory.
+
+9. use the below command 
+cat etc/.ibm/registry/InstallationManager.dat
+from here, take the launcher path from the result.
+Launcher path: /export/local/opt/soft/IBMIM/InstallationManager/eclipse/IBMIM
+
+10. From the launcher path go to tools path where we can find the imcl installed.
+eg path:/export/local/opt/soft/IBMIM/InstallationManager/eclipse/tools
+NOTE: WE HAVE TO APPLY THE FIX FROM THE IMCL LOCATED PATH.
+
+11. To apply the fix use the below command in the below path.
+path:/export/local/opt/soft/IBMIM/InstallationManager/eclipse/tools
+cmnd: ./imcl install 8.5.5.11-WS-WASIHS_GSKit-MultiOS-IFPI94222_8.5.5011.20180312_1717 -installationDirectory /export/local/opt/soft/IBMIHS85 -repositories /export/local/opt/software/IBMIHS85_IFIX/repository.config
+
+12.After applying the fix we've to go to bin path of the IHS(/export/local/opt/soft/IBMIHS85/bin/) and run 
+./genHistoryReport.sh script.
+Which generates the historyReport.html file in the bin path.
+
+13.Now, open the generated historyReport.html file and check for the latest updated version of IHS
+Cmnd: cat historyReport.html
+ 
+14. Start all the instances running on IHS85
+cmnd: for i in `ls -1 /app/IBMIHS85/bin/apachectl_*`; do ${i} start; done.
+Make sure all the instances are up and running.
+========================
+
+How to prepare imcl command:
+
+eg cmnd: ./imcl install 8.5.5.11-WS-WASIHS_GSKit-MultiOS-IFPI94222_8.5.5011.20180312_1717 -installationDirectory /export/local/opt/soft/IBMIHS85 -repositories /export/local/opt/software/IBMIHS85_IFIX/repository.config
+here,
+
+i)8.5.5.11-WS-WASIHS_GSKit-MultiOS-IFPI94222_8.5.5011.20180312_1717 is the latest version of the fix.
+where we can take it from the repository.config file 
+under the /export/local/opt/software/IBMIHS85_IFIX/repository.config path.
+
+ii)installation directory: /export/local/opt/soft/IBMIHS85 is the product directory,we have to take from bin path.
+Path: /export/local/opt/soft/IBMIHS85/bin/
+and 
+run ./versioninfo.sh 
+where we can find the product directory.
+
+iii)Repository path: where we unzipped the binary/Zip file.
+path: /export/local/opt/software/IBMIHS85_IFIX/repository.config
+
+===========================================
+
+To make sure all the instances are running:
+
+1.we can take the list of processes running on IHS before stopping them into a txt file.
+cmnd: ps -ef | grep -i IBMIHS85 > /tmp/IBMIHS85.txt
+using this command all the processes will be listed into a txt file in the tmp path of the server.
+2. Once we bring them up, we can compare the processess using the txt file.
+

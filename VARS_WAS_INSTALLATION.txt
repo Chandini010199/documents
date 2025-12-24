@@ -1,0 +1,65 @@
+[plawwsgi192101]:[~]$history
+    1  pwd
+    2  ls -ltr .ssh/
+    3  cd /app/soft
+    4  curl -O https://artifactory-am2.devops.aig.net/artifactory/chs-middleware-generic-dev-local/binaries/was85526_latest.tar
+    5  ls -ltr
+    6  tar -xvf was85526_latest.tar
+    7  ls -ltr
+    8  cd was85526
+    9  ls -ltr
+   10  mv * /app/soft
+   11  cd ..
+   12  rm -rf was85526
+   13  cd
+   14  mkdir etc
+   15  cd etc/
+   16  mkdir .ibm
+   17  cd .ibm/
+   18  mkdir registry
+   19  cd /app/soft
+   20  ls
+   21  cd was85
+   22  ls
+   23  cd WebSphere/AppServerBin/bin/
+   24  ./manageprofiles.sh -create -templatePath /app/soft/was85/WebSphere/AppServerBin/profileTemplates/dmgr -profileName was85_dm -cellName was85_cell -profilePath /app/soft/was85/WebSphere/was85_dm -cellName was85_cell -nodeName was85_dm -hostName plawwsgi192101.r1-core.r1.aig.net -isDefault=true -startingPort 30000 -validatePorts
+   25  cat /app/soft/was85/WebSphere/was85_dm/logs/AboutThisProfile.txt
+   26  ./manageprofiles.sh -create -templatePath /app/soft/was85/WebSphere/AppServerBin/profileTemplates/managed -profileName was85_node -profilePath /app/soft/was85/WebSphere/was85_node -nodeName was85_node -hostName plawwsgi192101.r1-core.r1.aig.net -isDefault=true -startingPort 30040 -validatePorts
+   27  cd ../../was85_dm/bin/
+   28  ./startManager.sh
+   29  cd ../../was85_node/bin/
+   30  ./addNode.sh plawwsgi192101.r1-core.r1.aig.net 30003 -startingport 30040
+   31  cd ../properties/
+   32  vi soap.client.props
+   33  cd ../../was85_dm/properties/
+   34  vi soap.client.props
+   35  cd ../bin/
+   36  ./stopManager.sh ; ./startManager.sh
+   37  ../../was85_node/bin/
+   38  cd ../../was85_node/bin/
+   39  ./stopNode.sh
+   40  ./syncNode.sh plawwsgi192101.r1-core.r1.aig.net 30003
+   41  ./startNode.sh
+   42  cd ../../was85_dm/bin/
+   43  ./stopManager.sh ; ./startManager.sh
+   44  cd ../../was85_node/bin/
+   45  ./stopNode.sh
+   46  ./syncNode.sh plawwsgi192101.r1-core.r1.aig.net 30003
+   47  ./startNode.sh
+   48  cd /tmp
+   49  mkdir ihs_ifix
+   50  cd ihs_ifix/
+   51  unzip 8.5.5.25-WS-WASIHS-IFPH62263.zip
+   52  cd /app/soft/IBMIM/installationmanager/eclipse/tools/
+   53  ./imcl install 8.5.5.25-WS-WASIHS-MultiOS-IFPH62263_8.5.5025.20240715_1418 -repositories /tmp/ihs_ifix/repository.config -installationDirectory /app/soft/IBMIHS85 -acceptLicense -showVerboseProgress
+   54  cd /app/soft/IBMIHS85/bin/
+   55  ./apachectl -t
+   56  cd ../conf/
+   57  ls -ltr
+   58  cp mime.types.default mime.types
+   59  cp admin.conf.default admin.conf
+   60  vi admin.conf
+   61  cd ../bin/
+   62  ./adminctl start
+   63  ldd /app/soft/IBMIHS85/bin/httpd
+   64  history

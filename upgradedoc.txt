@@ -1,0 +1,54 @@
+1.Check for the current version and the version to which it needs to get upgrade.
+Requestor will provide us the latest version in a file format
+We need to save that file in our local machine and need to place that file in a tmp directory of that server via winscp
+
+2.place the file in /app folder in the server and need to unzip there.
+
+3.Copy the conf file from the old version(httpd-2.4.39) to the new version(httpd-2.4.53) conf path(/app/httpd-2.4.53/conf)
+cmnd:- cp -rp httpd_gain_dev_remote.conf /app/httpd-2.4.53/conf
+
+4.Copy the "apachectl_gain" from the bin path of old version to new version bin path(/app/httpd-2.4.53/bin)
+cmnd:- cp -rp apachectl_gain /app/httpd-2.4.53/bin
+
+NOTE:- Check whether the conf file and apachectl file is configured into new version
+cmnd:- grep -i httpd.2.4.39 httpd_gain_dev_remote.conf
+       grep -i httpd.2.4.39 apachectl_gain 
+
+5.Take backup of existing conf file in latest version before doing any changes.
+cmnd:- cp -rp httpd_gain_dev_remote.conf httpd_gain_dev_remote.conf_23MAR2022
+
+6. Below cmnd is used to copy all the contents of conf file from the previous version to latest version
+cmnd:- sed -i.bak -e 's/httpd-2.4.39/httpd-2.4.53/g' httpd_gain_dev_remote.conf
+
+7. Now to check all the paths in the conf file was upgrdaed to latest version 
+open the conf file in VI editor and check all the uncommented paths.
+cmnd:- vi httpd_gain_dev_remote.conf
+
+For each of the uncommented path we have check whether it is configured in the current version(latest version) or not.
+If the uncommented path is not configured in the latest version we have to configure it(if a directory is not present in the latest version we've to create the directory)
+mkdir modules(if modules directory is not configured in latest version)
+If any static content is not configured then we can copy the content directly from previous version to the latest.
+cmnd:- cp -rp mod_jk.so /app/httpd-2.4.53/modules/
+
+8. we've to configure the changes of apactl_gain to the latest version.
+cmnd:- sed -i.bak -e 's/httpd-2.4.39/httpd-2.4.53/g' apachectl_gain
+
+9. Now, to confirm the current version of the apache
+path:- cd httpd-2.4.53/bin
+cmnd:- ./apachectl_gain -v
+it will show the result of current version on which apache is running.
+cmnd:- ./apachectl_gain -t
+if the result shows as syntax:OK then the upgrade is success.
+if it it is throwing an error then we need to check for the path/directory in the current version and needs to configure it.
+
+10. stop the server in the previous version and start the server in latest version.
+ 
+
+
+
+
+
+
+
+
+

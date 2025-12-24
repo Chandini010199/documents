@@ -1,0 +1,69 @@
+
+FIXPACK - 9.0.5.6- 9.0.5.14
+Prevalidation steps - 
+Need to check the disk space
+cd ~ -> home directory
+Need to check if imcl is present under installationManager/eclipse/tools/
+Need to take backup of WAS profile 
+Place the FP zip file under any specific path, unzip the file and check the extracted repository.config for the latest version/offeringID
+Stop the services by executing the kill cmd - [ref - ps -ef | grep -i java | grep -i was90 | awk '{print $2}' | xargs kill -9]
+imcl command - 
+./imcl install <<offering ID_Version>> -repositories <<repository.config file path>> -installationDirectory <<Installation directory>> -acceptLicense -showVerboseProgress
+Post validation -
+Navigate to bin path
+- check the version
+./versionInfo.sh 
+- clear the cache
+./clearClassCache.sh
+./osgiCfgInit.sh
+start the services 
+------------------------------------------------------------
+Fixpack - 8.5.5.18 -8.5.5.22
+WAS85.22 doesn't support java 1.7
+Disk space check 
+take backup of WAS profile
+Installation directory - /export/local/opt/soft/was85dev/WebSphere/AppServerBin/bin/ ./versionInfo.sh - version check
+./managesdk.sh -listEnabledProfileAll - to check java versions supported by applications
+cd .
+cd etc/.ibm/registry/
+cat InstallationManager.dat - to get the imcl path
+cd /home/usradmin/IBM/InstallationManager/eclipse/tools/ - verify imcl is there or not
+./imcl listInstalledPackages
+ps -ef | grep -i java | grep -i was90 | awk '{print $2}' | xargs kill -9] - stop all the services
+./imcl uninstall 7.0.1.0-WS-WASJavaSDK7-LinuxS39064-IFPH34273_7.0.1000.20210210_1454 -installationDirectory /export/local/opt/soft/was85dev/WebSphere/AppServerBin -sVP
+./imcl uninstall 7.1.0.0-WS-WASJavaSDK7-LinuxS39064-IFPH34272_7.1.0.20210210_1432 -installationDirectory /export/local/opt/soft/was85dev/WebSphere/AppServerBin -sVP
+./imcl uninstall com.ibm.websphere.IBMJAVA.v70_7.0.10070.20200825_1806 -installationDirectory /export/local/opt/soft/was85dev/WebSphere/AppServerBin -sVP
+./imcl uninstall com.ibm.websphere.IBMJAVA.v71_7.1.4070.20200910_1552 -installationDirectory /export/local/opt/soft/was85dev/WebSphere/AppServerBin -sVP
+./imcl listInstalledPackages - verify if the 1.7 java packages are uninstalled
+Now Upgrade the WAS version.
+-->Error while executing versionInfo.sh/managesdk.sh
+/export/local/opt/soft/was85dev/WebSphere/AppServerBin/bin/sdk/_setupSdk.sh: line 36: /export/local/opt/soft/ was85dev/WebSphere/AppServerBin/bin/sdk/_setupsdk1.7_64.sh: No such file or directory
+Resolution - 
+ls -lrt /export/local/opt/soft/was85dev/WebSphere/AppServerBin/bin/sdk/_setupsdk1.7_64.sh
+cd /export/local/opt/soft/was85dev_FP18/WebSphere/AppServerBin/properties/sdk/
+grep -i 1.7 *.properties
+export/local/opt/soft/was85dev/WebSphere/AppServerBin/properties/sdk/
+cp -pr cmdDefaultSDK.properties cmdDefaultSDK.properties_bkp
+vi cmdDefaultSDK.properties
+change it COMMAND_DEFAULT_SDK=1.7_64 to COMMAND_DEFAULT_SDK=1.8_64_bundled
+cd ../../bin/
+./versionInfo.sh
+./historyInfo.sh
+
+
+changing the java version with below cmd:
+./managesdk.sh -enableProfile -profileName ocds_prod_node -sdkName 1.8_64
+-----------------------------------------------------------------------
+Oracle to OpenJDK:
+[usradmin@algswscs1740001 bin]$ diff setenv.sh_ORACLE setenv.sh
+1c1,2
+< export JAVA_HOME=/app/java/jdk1.8.0_181
+---
+> #export JAVA_HOME=/app/java/jdk1.8.0_181
+> export JAVA_HOME=/app/soft/open_jdk/jdk8u202-b08
+
+Take backup of setenv.sh: cp -p setenv.sh setenv.sh_ORACLE
+create openJDK folder - /app/java/open_jdk/
+place the file jdk8u202-b08 under the path 
+update setenv.sh by adding the openjdk path.
+--------------------------------------------------------------

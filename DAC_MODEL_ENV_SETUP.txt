@@ -1,0 +1,64 @@
+WAS DAC setup in model  - ftwlmscimw89/ftwlmscimw90
+
+1. Install IBMIM
+./imcl install com.ibm.cic.agent -repositories ../repository.config -installationDirectory /export/local/opt/soft/IBMIM/installationmanager -dataLocation /export/local/opt/soft/IBMIM/datalocation -accessRights nonAdmin -acceptLicense -showVerboseProgress
+
+2. Install WAS 8.5.5.0 base version on both the servers
+/export/local/opt/soft/was85modl/WebSphere/AppServerBin
+verify the version
+
+3. WAS FIXPACK 8.5.5.22 on both the servers
+./imcl install com.ibm.websphere.ND.v85_8.5.5022.20220703_1123 -repositories /export/local/opt/soft/software/TEMP_WAS_FIXPACK_INSTALL/TEMP_WAS855_FIXPACK_INSTALL_130224050739/repository.config -installationDirectory /export/local/opt/soft/was85modl/WebSphere/AppServerBin -acceptLicense -showVerboseProgress
+verify the version
+
+4.Creating DMGR on ftwlmscimw89
+/export/local/opt/soft/was85modl/WebSphere/AppServerBin
+./manageprofiles.sh -create -templatePath /export/local/opt/soft/was85modl/WebSphere/AppServerBin/profileTemplates/dmgr -profileName uwgp2_modl_dm -cellName uwgp2_modl_cell -profilePath /export/local/opt/soft/was85modl/WebSphere/uwgp2_modl_dm -cellName uwgp2_modl_cell -nodeName uwgp2_modl_dm -hostName ftwlmscimw89.r1-core.r1.aig.net -isDefault=true -startingPort 60000 -validatePorts
+
+/export/local/opt/soft/was85modl/WebSphere/uwgp2_modl_dm/logs/AboutThisProfile.txt
+Node name: uwgp2_modl_dm
+Cell name: uwgp2_modl_cell
+Host name: ftwlmscimw89.r1-core.r1.aig.net
+Enable administrative security (recommended): False
+Administrative console port: 60000
+Administrative console secure port: 60001
+Management bootstrap port: 60002
+Management SOAP connector port: 60003
+
+Creating Node on ftwlmscimw89
+/export/local/opt/soft/was85modl/WebSphere/AppServerBin
+./manageprofiles.sh -create -templatePath /export/local/opt/soft/was85modl/WebSphere/AppServerBin/profileTemplates/managed -profileName uwgp2_modl_node -profilePath /export/local/opt/soft/was85modl/WebSphere/ uwgp2_modl_node -nodeName mw89_uwgp2_modl_node -hostName ftwlmscimw89.r1-core.r1.aig.net -isDefault=true -startingPort 60050 -validatePorts
+
+5. Creating Node on ftwlmscimw90
+/export/local/opt/soft/was85modl/WebSphere/AppServerBin
+./manageprofiles.sh -create -templatePath /export/local/opt/soft/was85modl/WebSphere/AppServerBin/profileTemplates/managed -profileName uwgp2_modl_node -profilePath /export/local/opt/soft/was85modl/WebSphere/uwgp2_modl_node -nodeName mw90_uwgp2_modl_node -hostName ftwlmscimw90.r1-core.r1.aig.net -isDefault=true -startingPort 60050 -validatePorts
+
+
+6. Federate DMGR with node on ftwlmscimw89
+start DMGR now and execute below steps
+/export/local/opt/soft/was85modl/WebSphere/uwgp2_modl_node/bin
+./addNode.sh ftwlmscimw89.r1-core.r1.aig.net 60003 -startingport 60050
+Federate DMGR with node on ftwldscimw90
+/export/local/opt/soft/was85modl/WebSphere/uwgp2_modl_node/bin
+./addNode.sh ftwlmscimw89.r1-core.r1.aig.net 60003 -startingport 60050
+
+7. cluster creation through jython scripts
+
+Cluster is: dac
+Server 1 is: dac_1
+Node1 is: mw134_uwgp2_qa_node
+Starting Port is: 60150
+Host is: ftwldscimw134.r1-core.r1.aig.net
+Server 2 is: dac_2
+Node2 is: mw135_uwgp2_qa_node
+Host is: ftwldscimw135.r1-core.r1.aig.net
+Cluster logs directory: /opt/logs/was85/dac/qa
+Virtual Host is: dac
+
+
+soap.client.props
+{xor}MihvaD47MjYx, 1800(timeout)
+
+8.config changes: heap size, custom_properties, jdbc, data source(Add env variable jconn3.jar file path), virtual host
+data source test connection.
+

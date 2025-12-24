@@ -1,0 +1,120 @@
+$grep -i custom httpd_ams_adjustments_qa_local_ihs85.conf--> to check the  
+(grep -i listen httpd_ams_adjustments_qa_local_ihs85.conf)-->to see the port on which conf file is running
+$grep -i documentroot httpd_bulkdelivery_qa_local_ihs85.conf---> to see the documentroot of the server.
+grep -i webagent httpd_bulkdelivery_qa_local_ihs85.conf-->to see siteminder enabled or not
+------------------------------------------------
+To find the site minder policyservers:
+Go to config path and search for webagent to find the siteminder is enabled or not
+cmnd: grep -i webagent httpd_rsw_prod.conf
+then cat the siteminder file 
+cmnd: cat /app/httpd-2.4.51/conf/WebAgent_rsw.conf
+then cat the hostconfigfile to view the policyserver list.
+HostConfigFile="/app/SMWAv1252_64/webagent/config/SmHost_plgsasam2plcy20.conf"
+
+then we can able to see the policy server list running on the particular server.
+
+
+-------------------------------------------------------------
+
+To find the certs present in the current server:
+go to conf file path and find teh conf file running with the port number 
+then the following cmnd is used to find the kdb file path 
+cmnd:  grep -i kdb httpd_ccd_remote_ihs85.conf
+then,
+take the kdb path
+/opt/IBMIHS85/key_db/ccdmodl-int_ihs85/key.kdb
+then,
+go to bin path and execute the following cmnd:
+cmnd: ./gskcmd -cet -list -db /opt/IBMIHS85/key_db/ccdmodl-int_ihs85/key.kdb
+here will find the list of certs present in the server
+to find the details for the certs use the below cmnd:
+cmnd: ./gskcmd -cert-details -db /opt/IBMIHS85/key_db/ccdmodl-int_ihs85/key.kdb -label ccdmodel.aig.net(certname)
+pwd is mw07admin for IHS
+
+here, we can see the details of the cert
+
+----------------------------------------------------
+
+Webserver configurations
+------------------------
+ServerName
+Listen--> 
+Custom log
+Error log
+Plugin
+Siteminder--> grep -i webagent conffile name(is used to know whether the siteminder is enabled or not)
+SSL---> grep -i kdb/pem conf file name(to know the key.kdb file which means ssl enabled or not) 
+Documentroot
+
+below kdb cmnd is used to check whether the connection is secure or not
+usradmin@ftwldscimw129:(/export/local/opt/IBMIHS85/conf)$grep -i kdb httpd_sri_int_local.conf
+#KeyFile /export/local/opt/IBMIHS85/ihsserverkey.kdb ---(it is not secured as it is in commented )
+usradmin@ftwldscimw129:(/export/local/opt/IBMIHS85/conf)$grep -i kdb httpd_ams_adjustments_qa_local_ihs85.conf
+#KeyFile /export/local/opt/IBMIHS85/ihsserverkey.kdb
+Keyfile /export/local/opt/IBMIHS85/key_db/ams_adjustments/ams_adjustments.kdb --(it is secured one)
+usradmin@ftwldscimw129:(/export/local/opt/IBMIHS85/conf)$
+usradmin@ftwldscimw129:(/export/local/opt/IBMIHS85/conf)$grep -i ssl httpd_ams_adjustments_qa_local_ihs85.conf
+
+
+
+
+
+WEbserver: ftwldscimw129
+conf file: httpd_ams_adjustments_qa_local_ihs85.conf (grep -i listen httpd_ams_adjustments_qa_local_ihs85.conf)
+port number: 30057
+apachectl: apachectl_ams_adjustments_qa_ihs85
+App servers Running: "ftwldscimw122.r1-core.r1.aig.net"; port num:30040
+                     "ftwldscimw123.r1-core.r1.aig.net"; port num:30040
+log path: /export/local/opt/IBMIHS85/logs/httpd_ams_adjustments_qa_local_ihs85.conf
+
+
+----------------------
+
+conf file: httpd_aiwcs_sync_service_qa_85.conf
+port number: 45237
+log path: /export/local/opt/IBMIHS85/logs/access_aiwcs_sync_service_qa_85.log_%m_%d_%Y 86400"
+apachectl: 	apachectl_aiwcs_sync_service_qa_85
+plugin path: /export/local/opt/IBMIHS85_Plugins/config/aiwcs_sync_service_qa_85/plugin-cfg.xml
+App servers running: "ftwldscimw114.r1-core.r1.aig.net";Port="45220" Protocol="http"/>
+          Hostname="ftwldscimw114.r1-core.r1.aig.net" Port="45221" Protocol="https"	
+ Hostname="ftwldscimw115.r1-core.r1.aig.net" Port="45220" Protocol="http"/>
+         <Transport Hostname="ftwldscimw115.r1-core.r1.aig.net" Port="45221" Protocol="https">
+
+
+conf file: httpd_sri_int_local.conf
+port number: 38398
+log path: /export/local/opt/IBMIHS85/logs/access_sri_support_local.log_%m_%d_%Y
+apachectl:apachectl_sri_int_local
+plugin path: /export/local/opt/IBMIHS85_Plugins/config/sri_int_local/plugin-cfg.xml
+App server running: 
+
+
+conf file: httpd_aiwcs_sync_service_qa_85.conf
+port number: 45237
+log path: /export/local/opt/IBMIHS85/logs/access_aiwcs_sync_service_qa_85.log_%m_%d_%Y 
+apachectl: apachectl_aiwcs_sync_service_qa_85
+plugin path: /export/local/opt/IBMIHS85_Plugins/config/sri_support_local85/plugin-cfg.xml
+App servers running :  Hostname="ftwldscimw179.r1-core.r1.aig.net" Port="38460" Protocol="http"/>
+                       Name="ftwdsdbg2g31.r1-core.r1.aig.net:38460"/>
+      <VirtualHost Name="ftwdsdbg2g31.r1-core.r1.aig.net:38461"/>
+
+
+conf file: httpd_isuite_ws_qa_local_ihs85.conf
+port number: 40060
+log path: /export/local/opt/IBMIHS85/logs/access_isuite_ws_qa_local.log_%m_%d_%Y 86400"
+apachectl: apachectl_isuite_ws_qa_local_ihs85
+plugin path: /export/local/opt/IBMIHS85_Plugins/config/isuite_ws_qa_local_85/plugin-cfg.xml
+App servers running:  Hostname="ftwldscimw114.r1-core.r1.aig.net" Port="40060" Protocol="http"/>
+         <Transport Hostname="ftwldscimw114.r1-core.r1.aig.net" Port="40061" Protocol="https">
+ Hostname="ftwldscimw115.r1-core.r1.aig.net" Port="40060" Protocol="http"/>
+         <Transport Hostname="ftwldscimw115.r1-core.r1.aig.net" Port="40061" Protocol="https">
+		 
+
+conf file: httpd_bulkdelivery_qa_local_ihs85.conf
+port Number: 16117
+log path: /export/local/opt/IBMIHS85/logs/access_sri_support_local.log_%m_%d_%Y 86400" common
+apachectl: apachectl_bulkdelivery_qa_local_ihs85
+Plug-in path: /export/local/opt/IBMIHS85_Plugins/config/bulkdelivery_qa_local_85/plugin-cfg.xml
+App servers Running:  Hostname="ftwldscimw114.r1-core.r1.aig.net" Port="16100" Protocol="http"/>
+                     
+============================================================
